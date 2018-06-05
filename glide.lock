@@ -1,0 +1,19 @@
+hash: a0571a5fa154494ebad394348660043a61c78a0f7bb42688cdccc7a8f8cf43b0
+updated: 2018-06-05T19:43:51.349117168+01:00
+imports:
+- name: github.com/julienschmidt/httprouter
+  version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
+- name: github.com/radovskyb/watcher
+  version: 6145e1439b9de93806925353403f91d2abbad8a5
+- name: github.com/sirupsen/logrus
+  version: c155da19408a8799da419ed3eeb0cb5db0ad5dbc
+- name: golang.org/x/crypto
+  version: bd6f299fb381e4c3393d1c4b1f0b94f5e77650c8
+  subpackages:
+  - ssh/terminal
+- name: golang.org/x/sys
+  version: 8eb05f94d449fdf134ec24630ce69ada5b469c1c
+  subpackages:
+  - unix
+  - windows
+testImports: []
