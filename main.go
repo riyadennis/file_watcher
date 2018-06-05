@@ -2,38 +2,51 @@ package main
 
 import (
 	"flag"
-	"os"
 	"fmt"
+	"github.com/radovskyb/watcher"
+	"log"
+	"time"
 )
 
 func main() {
 	watchFolder := flag.String("watch_folder", "invoices/", "Name of the folder to watch")
 	flag.Parse()
-	chan1 := make(chan string, 1)
-
-	for {
-		d, _ := os.Open(*watchFolder)
-		files, _ := d.Readdir(-1)
-		for i, file := range files {
-			fmt.Printf("Files in this folder are %s \n", file.Name())
-			if i == len(files){
-				chan1<-"done"
+	fmt.Printf("%v", *watchFolder)
+	watcher := watcher.New()
+	done := make(chan bool)
+	go func(){
+		for {
+			select {
+			case ev := <-watcher.Event:
+				log.Println("Event:", ev)
+			case err := <- watcher.Error:
+				log.Println("Error:", err)
 			}
 		}
-		close(chan1)
-		_, ok := <-chan1
-		if !ok{
-			break
-		}
-	}
+	}()
 
+	WatchFolder(*watchFolder, watcher)
+
+	<-done
+	watcher.Close()
 }
-func ReadFolder(folder string) int{
-	d, _ := os.Open(folder)
-	files, _ := d.Readdir(-1)
-	for _, file := range files {
-		fmt.Printf("Files in this folder are %s \n", file.Name())
-
+func WatchFolder(folder string, watcher *watcher.Watcher)  {
+	// Watch this folder for changes.
+	if err := watcher.Add(folder); err != nil {
+		log.Fatalln(err)
 	}
-	return len(files)
+	// Print a list of all of the files and folders currently
+	// being watched and their paths.
+	for path, f := range watcher.WatchedFiles() {
+		fmt.Printf("%s: %s\n", path,  f.Name())
+	}
+
+	// Trigger 2 events after watcher started.
+	go func() {
+		watcher.Wait()
+	}()
+
+	if err := watcher.Start(time.Millisecond * 100); err != nil {
+		log.Fatalln(err)
+	}
 }
