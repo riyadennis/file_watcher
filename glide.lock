@@ -1,12 +1,20 @@
-hash: 74a639c27c9e6e3ddf89ec6d0bf9e2d466df8f9264bd9aebd62e9c215d83d7bd
-updated: 2018-06-05T23:20:00.195939147+01:00
+hash: 8e45ae5f3e0d4115c8dacff37879633d30590fdae281bd7da81b45eadc82e247
+updated: 2018-06-06T22:58:22.160047414+01:00
 imports:
-- name: github.com/julienschmidt/httprouter
-  version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
+- name: github.com/go-redis/redis
+  version: 83fb42932f6145ce52df09860384a4653d2d332a
+  subpackages:
+  - internal
+  - internal/consistenthash
+  - internal/hashtag
+  - internal/pool
+  - internal/proto
+  - internal/singleflight
+  - internal/util
 - name: github.com/radovskyb/watcher
   version: 6145e1439b9de93806925353403f91d2abbad8a5
 - name: github.com/riyadennis/redis-wrapper
-  version: 8bf7197482901a1f72dd3553bf566be620da4f9f
+  version: 4c8d7fff1d920bdff94c5d30944f7f85fcc18353
 - name: github.com/satori/go.uuid
   version: f58768cc1a7a7e77a3bd49e98cdd21419399b6a3
 - name: github.com/sirupsen/logrus

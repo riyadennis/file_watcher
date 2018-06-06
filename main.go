@@ -5,6 +5,7 @@ import (
 	"github.com/radovskyb/watcher"
 	"github.com/sirupsen/logrus"
 	"github.com/file_watcher/services"
+	"github.com/riyadennis/redis-wrapper"
 )
 
 func main() {
@@ -23,8 +24,16 @@ func main() {
 		}
 	}()
 
-	services.WatchFolder(*watchFolder, watcher)
+	client := &redis_wrapper.Client{}
+	redisClient, err := client.Create()
+	if err != nil {
+		logrus.Error(err)
+	}
 
+	err = services.WatchFolder(*watchFolder, watcher, redisClient)
+	if err != nil {
+		logrus.Error(err)
+	}
 	<-done
 	watcher.Close()
 }
