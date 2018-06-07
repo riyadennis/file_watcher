@@ -13,7 +13,30 @@ type WatchedFile struct {
 	Path string
 }
 
-func WatchFolder(folder string, watcher *watcher.Watcher, storage redis_wrapper.Storage) (error){
+func CreateWatcher() (*watcher.Watcher) {
+	watcher := watcher.New()
+	go func() {
+		for {
+			select {
+			case ev := <-watcher.Event:
+				logrus.Println("Event:", ev)
+			case err := <-watcher.Error:
+				logrus.Println("Error:", err)
+			}
+		}
+	}()
+	return watcher
+}
+func CreateRedisClient() (*redis_wrapper.Client) {
+	client := &redis_wrapper.Client{}
+	redisClient, err := client.Create()
+	if err != nil {
+		logrus.Errorf("Unable to connect to the storage got error :  %s", err)
+		return nil
+	}
+	return redisClient
+}
+func WatchFolder(folder string, watcher *watcher.Watcher, storage redis_wrapper.Storage) (error) {
 	// Watch this folder for changes.
 	if err := watcher.Add(folder); err != nil {
 		return err
