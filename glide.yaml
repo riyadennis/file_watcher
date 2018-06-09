@@ -9,3 +9,6 @@ import:
   version: ^1.2.0
 - package: github.com/sirupsen/logrus
   version: ^1.0.5
+- package: github.com/alicebob/miniredis
+  version: ^2.4.3
+- package: github.com/alicebob/gopher-json

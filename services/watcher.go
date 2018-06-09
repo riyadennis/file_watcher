@@ -6,11 +6,56 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/riyadennis/redis-wrapper"
 	"github.com/satori/go.uuid"
+	"os"
+	"github.com/pkg/errors"
 )
 
 type WatchedFile struct {
 	Name string
 	Path string
+	Event chan struct{}
+	Error chan error
+}
+type Watcher struct {
+	files     map[string]os.FileInfo
+	fileNames map[int]string
+}
+
+func (w Watcher) Add(folder string) (error) {
+	files, err := getFilesFromFolder(folder)
+	if err != nil {
+		return err
+	}
+	if len(files) < 0 {
+		return errors.New("Empty folder")
+	}
+	for k, f := range files {
+		w.fileNames[k] = f.Name()
+		w.files[f.Name()] = f
+	}
+	return nil
+}
+func getFilesFromFolder(folder string) ([]os.FileInfo, error) {
+	_, err := os.Stat(folder)
+	if err != nil {
+		return nil, err
+	}
+	f, err := os.Open(folder)
+	if err != nil {
+		return nil, err
+	}
+	//read all the contents
+	files, err := f.Readdir(-1)
+	if err != nil {
+		return nil, err
+	}
+	return files, nil
+}
+func (w Watcher) Start(duration time.Duration) (error) {
+	return nil
+}
+func (w Watcher) Close() {
+
 }
 
 func CreateWatcher() (*watcher.Watcher) {
@@ -41,7 +86,8 @@ func WatchFolder(folder string, watcher *watcher.Watcher, storage redis_wrapper.
 	if err := watcher.Add(folder); err != nil {
 		return err
 	}
-	AddFileNameToClient(storage, watcher)
+	files := GetWatchedFiles(watcher)
+	AddFilesToStorage(files, storage)
 
 	// Trigger 2 events after watcher started.
 	go func() {
@@ -53,8 +99,7 @@ func WatchFolder(folder string, watcher *watcher.Watcher, storage redis_wrapper.
 	}
 	return nil
 }
-func AddFileNameToClient(client redis_wrapper.Storage, watcher *watcher.Watcher) {
-	files := GetWatchedFiles(watcher)
+func AddFilesToStorage(files []WatchedFile, client redis_wrapper.Storage) {
 	for _, file := range files {
 		indexName := uuid.NewV4().String()
 		err := client.Set(indexName, file.Name, 0)

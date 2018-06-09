@@ -14,3 +14,6 @@ run:
 
 build:
 	go build -o $(GOPATH)/bin/prog-image $(GOFILES)
+
+start-redis:
+	redis-server /usr/local/etc/redis.conf

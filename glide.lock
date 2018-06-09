@@ -1,6 +1,12 @@
-hash: 8e45ae5f3e0d4115c8dacff37879633d30590fdae281bd7da81b45eadc82e247
-updated: 2018-06-06T22:58:22.160047414+01:00
+hash: 549ed9ccc7d32329df22d64521a9ba1021101484e2953206cd76602a31ba4917
+updated: 2018-06-09T10:48:31.182864008+01:00
 imports:
+- name: github.com/alicebob/gopher-json
+  version: 5a6b3ba71ee69b77cf64febf8b5a7526ca5eaef0
+- name: github.com/alicebob/miniredis
+  version: 5bcd02f955181a2e593f1ec6e08ed6ebb6e282b4
+  subpackages:
+  - server
 - name: github.com/go-redis/redis
   version: 83fb42932f6145ce52df09860384a4653d2d332a
   subpackages:
@@ -28,4 +34,29 @@ imports:
   subpackages:
   - unix
   - windows
-testImports: []
+testImports:
+- name: github.com/davecgh/go-spew
+  version: 6d212800a42e8ab5c146b8ace3490ee17e5225f9
+  subpackages:
+  - spew
+- name: github.com/gomodule/redigo
+  version: bb5990dc771ab24e169aaea90ee3b9ad50cffce9
+  subpackages:
+  - internal
+  - redis
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/pmezard/go-difflib
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
+  subpackages:
+  - difflib
+- name: github.com/stretchr/testify
+  version: 12b6f73e6084dad08a7c6e575284b177ecafbc71
+  subpackages:
+  - assert
+- name: github.com/yuin/gopher-lua
+  version: b0fa786cf4ea360285924c4a7fd42325be57aec8
+  subpackages:
+  - ast
+  - parse
+  - pm
